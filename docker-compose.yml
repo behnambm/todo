@@ -1,0 +1,72 @@
+version: "3.9"
+
+services:
+  message-broker:
+    build:
+      context: ./rabbitmq
+    ports:
+      - "5672:5672"   # for sender and consumer connections
+      - "15672:15672" # for RabbitMQ GUI
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq
+      - ./rabbitmq/log/:/var/log/rabbitmq
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    restart: always
+    networks:
+      - internal-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://guest:guest@localhost:15672/api/health/checks/alarms"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+  user-service:
+    build:
+      context: ./userservice
+    environment:
+      BROKER_USER_QUEUE: "user.queue"
+      AMQP_SERVER_URI: "amqp://guest:guest@message-broker:5672/"
+      GRPC_LISTEN_PORT: 4040
+    restart: on-failure
+    ports:
+      - "4040:4040"
+    networks:
+      - internal-net
+    depends_on:
+      message-broker:
+        condition: service_healthy
+
+  auth-service:
+    build:
+      context: ./authservice
+    environment:
+      GRPC_LISTEN_PORT: 6060
+      JWT_SECRET: "fs223dfs3w2qw4fsd3fsdfsd##@@#!@#@"
+    restart: on-failure
+    ports:
+      - "6060:6060"
+    networks:
+      - internal-net
+    depends_on:
+      message-broker:
+        condition: service_healthy
+
+  todo-service:
+    build:
+      context: ./todoservice
+    environment:
+      BROKER_TODO_QUEUE: "todo.queue"
+      AMQP_SERVER_URI: "amqp://guest:guest@message-broker:5672/"
+      GRPC_LISTEN_PORT: 7070
+    restart: on-failure
+    ports:
+      - "7070:7070"
+    networks:
+      - internal-net
+    depends_on:
+      message-broker:
+        condition: service_healthy
+
+networks:
+  internal-net:

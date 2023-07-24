@@ -1,0 +1,5 @@
+### Required env
+
+GRPC_LISTEN_PORT
+
+JWT_SECRET

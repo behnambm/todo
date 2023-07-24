@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option go_package = "github.com/behnambm/todo/authservice";
+
+
+// The Token service definition.
+service Token {
+  rpc IsTokenValid (TokenRequest) returns (TokenReply) {}
+  rpc GetToken (GetTokenRequest) returns (GetTokenReply) {}
+}
+
+message TokenRequest {
+  string token = 1;
+}
+
+message TokenReply {
+  bool isValid = 1;
+}
+
+message GetTokenRequest {
+  int64 userid = 1;
+}
+
+message GetTokenReply {
+  string token = 1;
+}

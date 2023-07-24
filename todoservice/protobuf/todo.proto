@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "github.com/behnambm/todo/todoservice";
+
+
+service Todo {
+  rpc GetUserTodos (UserTodosRequest) returns (UserTodosReply) {}
+  rpc GetUserTodosWithItems (UserTodosRequest) returns (UserTodosWithItemsReply) {}
+  rpc GetTodoWithItems (TodoRequest) returns (TodoWithItemsMessage) {}
+}
+
+message ItemMessage {
+  int64 id = 1;
+  string title = 2;
+  int64 priority = 3;
+}
+
+message TodoMessage {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message UserTodosRequest {
+  string userId = 1;
+}
+
+message TodoRequest {
+  string todoId = 1;
+}
+
+message UserTodosWithItemsRequest {
+  string userId = 1;
+}
+
+message TodoWithItemsMessage {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  repeated ItemMessage items = 4;
+}
+
+message UserTodosReply {
+  repeated TodoMessage todos = 1;
+}
+
+message UserTodosWithItemsReply {
+  repeated TodoWithItemsMessage todos = 1;
+}

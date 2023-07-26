@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/behnambm/todo/userservice/types"
 	_ "github.com/mattn/go-sqlite3"
+	"log"
 )
 
 type Repo struct {
@@ -14,11 +15,11 @@ type Repo struct {
 func New(dsn string) *Repo {
 	conn, err := sql.Open("sqlite3", dsn)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	if pingErr := conn.Ping(); pingErr != nil {
-		panic(pingErr)
+		log.Fatalln(pingErr)
 	}
 	return &Repo{
 		db: conn,
@@ -34,6 +35,20 @@ func (r Repo) GetUserByEmail(email string) (types.User, error) {
 	user := types.User{}
 	if err := row.Scan(&user.ID, &user.Email, &user.Name, &user.Password); err != nil {
 		return types.User{}, fmt.Errorf("[Repo] GetUserByEmail - %w", err)
+	}
+
+	return user, nil
+}
+
+func (r Repo) GetUserById(userId int64) (types.User, error) {
+	row := r.db.QueryRow(`SELECT * FROM user WHERE id = ?`, userId)
+	if row.Err() != nil {
+		return types.User{}, fmt.Errorf("[Repo] GetUserById - %w", row.Err())
+	}
+
+	user := types.User{}
+	if err := row.Scan(&user.ID, &user.Email, &user.Name, &user.Password); err != nil {
+		return types.User{}, fmt.Errorf("[Repo] GetUserById - %w", err)
 	}
 
 	return user, nil

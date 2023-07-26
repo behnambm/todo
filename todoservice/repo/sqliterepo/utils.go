@@ -6,7 +6,7 @@ import (
 
 // CreateTables will be used to create the tables that we need.
 func CreateTables(repo *Repo) error {
-	userTable := `
+	table := `
 	CREATE TABLE IF NOT EXISTS todo (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name VARCHAR(255) NOT NULL,
@@ -22,7 +22,7 @@ func CreateTables(repo *Repo) error {
 		FOREIGN KEY (todo_id) REFERENCES todo(id)
 	);
 	`
-	_, err := repo.db.Exec(userTable)
+	_, err := repo.db.Exec(table)
 	if err != nil {
 		log.Println(err)
 

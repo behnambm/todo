@@ -14,13 +14,14 @@ import (
 
 type TokenService interface {
 	IsTokenValid(string) bool
-	GetToken(int) (string, error)
+	GetToken(int64) (string, error)
+	IsValidWithClaim(string) (map[string]string, bool)
 }
 
 type Server struct {
 	ListenAddr string
 	tokenSvc   TokenService
-	pb.UnimplementedTokenServer
+	pb.UnimplementedAuthServer
 }
 
 func New(addr string, tokenService TokenService) *Server {
@@ -37,7 +38,7 @@ func (s Server) Run(ctx context.Context) {
 	}
 
 	rpcServer := grpc.NewServer()
-	pb.RegisterTokenServer(rpcServer, s)
+	pb.RegisterAuthServer(rpcServer, s)
 
 	go func() {
 		select {
@@ -54,6 +55,17 @@ func (s Server) Run(ctx context.Context) {
 	}
 }
 
+func (s Server) GetToken(ctx context.Context, in *pb.GetTokenRequest) (*pb.GetTokenReply, error) {
+	userId := in.GetUserid()
+
+	token, err := s.tokenSvc.GetToken(userId)
+	if err != nil {
+		return &pb.GetTokenReply{}, status.Error(codes.Unauthenticated, "unable to get token")
+	}
+
+	return &pb.GetTokenReply{Token: token}, nil
+}
+
 func (s Server) IsTokenValid(ctx context.Context, in *pb.TokenRequest) (*pb.TokenReply, error) {
 	token := in.GetToken()
 
@@ -64,15 +76,13 @@ func (s Server) IsTokenValid(ctx context.Context, in *pb.TokenRequest) (*pb.Toke
 	return &pb.TokenReply{IsValid: false}, nil
 }
 
-func (s Server) GetToken(ctx context.Context, in *pb.GetTokenRequest) (*pb.GetTokenReply, error) {
-	userid := in.GetUserid()
+func (s Server) ValidateTokenWithClaims(ctx context.Context, in *pb.ValidateTokenWithClaimsRequest) (*pb.ValidateTokenWithClaimsReply, error) {
+	token := in.GetToken()
 
-	token, err := s.tokenSvc.GetToken(int(userid))
-	if err != nil {
-		log.Println("[gRPC] GetToken - unable to get token for user ", userid, err)
-
-		return &pb.GetTokenReply{}, status.Error(codes.Unknown, "unable to get token")
+	claims, ok := s.tokenSvc.IsValidWithClaim(token)
+	if !ok {
+		return &pb.ValidateTokenWithClaimsReply{Claims: claims, IsValid: false}, nil
 	}
 
-	return &pb.GetTokenReply{Token: token}, nil
+	return &pb.ValidateTokenWithClaimsReply{Claims: claims, IsValid: true}, nil
 }

@@ -2,48 +2,54 @@ syntax = "proto3";
 
 option go_package = "github.com/behnambm/todo/todoservice";
 
-
 service Todo {
+  rpc GetTodo (TodoRequest) returns (TodoReply) {}
   rpc GetUserTodos (UserTodosRequest) returns (UserTodosReply) {}
   rpc GetUserTodosWithItems (UserTodosRequest) returns (UserTodosWithItemsReply) {}
-  rpc GetTodoWithItems (TodoRequest) returns (TodoWithItemsMessage) {}
-}
-
-message ItemMessage {
-  int64 id = 1;
-  string title = 2;
-  int64 priority = 3;
-}
-
-message TodoMessage {
-  int64 id = 1;
-  string name = 2;
-  string description = 3;
-}
-
-message UserTodosRequest {
-  string userId = 1;
+  rpc GetTodoWithItems (TodoRequest) returns (TodoWithItemsReply) {}
+  rpc GetItem (ItemRequest) returns (ItemReply) {}
 }
 
 message TodoRequest {
-  string todoId = 1;
+  int64 todoId = 1;
 }
 
-message UserTodosWithItemsRequest {
-  string userId = 1;
+message ItemRequest {
+  int64 itemId = 1;
 }
 
-message TodoWithItemsMessage {
+message UserTodosRequest {
+  int64 userId = 1;
+}
+
+message TodoReply {
   int64 id = 1;
   string name = 2;
   string description = 3;
-  repeated ItemMessage items = 4;
+  int64 userId = 4;
+}
+
+message ItemReply {
+  int64 id = 1;
+  string title = 2;
+  int64 priority = 3;
+  int64 userId = 4;
+  int64 todoId = 5;
 }
 
 message UserTodosReply {
-  repeated TodoMessage todos = 1;
+  repeated TodoReply todos = 1;
+}
+
+message TodoWithItemsReply {
+  int64 id = 1;
+  string name = 2;
+  string description = 3;
+  int64 userId = 4;
+  int64 todoId = 5;
+  repeated ItemReply items = 6;
 }
 
 message UserTodosWithItemsReply {
-  repeated TodoWithItemsMessage todos = 1;
+  repeated TodoWithItemsReply todos = 1;
 }

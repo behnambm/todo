@@ -22,9 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TodoClient interface {
+	GetTodo(ctx context.Context, in *TodoRequest, opts ...grpc.CallOption) (*TodoReply, error)
 	GetUserTodos(ctx context.Context, in *UserTodosRequest, opts ...grpc.CallOption) (*UserTodosReply, error)
 	GetUserTodosWithItems(ctx context.Context, in *UserTodosRequest, opts ...grpc.CallOption) (*UserTodosWithItemsReply, error)
-	GetTodoWithItems(ctx context.Context, in *TodoRequest, opts ...grpc.CallOption) (*TodoWithItemsMessage, error)
+	GetTodoWithItems(ctx context.Context, in *TodoRequest, opts ...grpc.CallOption) (*TodoWithItemsReply, error)
+	GetItem(ctx context.Context, in *ItemRequest, opts ...grpc.CallOption) (*ItemReply, error)
 }
 
 type todoClient struct {
@@ -33,6 +35,15 @@ type todoClient struct {
 
 func NewTodoClient(cc grpc.ClientConnInterface) TodoClient {
 	return &todoClient{cc}
+}
+
+func (c *todoClient) GetTodo(ctx context.Context, in *TodoRequest, opts ...grpc.CallOption) (*TodoReply, error) {
+	out := new(TodoReply)
+	err := c.cc.Invoke(ctx, "/Todo/GetTodo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *todoClient) GetUserTodos(ctx context.Context, in *UserTodosRequest, opts ...grpc.CallOption) (*UserTodosReply, error) {
@@ -53,9 +64,18 @@ func (c *todoClient) GetUserTodosWithItems(ctx context.Context, in *UserTodosReq
 	return out, nil
 }
 
-func (c *todoClient) GetTodoWithItems(ctx context.Context, in *TodoRequest, opts ...grpc.CallOption) (*TodoWithItemsMessage, error) {
-	out := new(TodoWithItemsMessage)
+func (c *todoClient) GetTodoWithItems(ctx context.Context, in *TodoRequest, opts ...grpc.CallOption) (*TodoWithItemsReply, error) {
+	out := new(TodoWithItemsReply)
 	err := c.cc.Invoke(ctx, "/Todo/GetTodoWithItems", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *todoClient) GetItem(ctx context.Context, in *ItemRequest, opts ...grpc.CallOption) (*ItemReply, error) {
+	out := new(ItemReply)
+	err := c.cc.Invoke(ctx, "/Todo/GetItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,9 +86,11 @@ func (c *todoClient) GetTodoWithItems(ctx context.Context, in *TodoRequest, opts
 // All implementations must embed UnimplementedTodoServer
 // for forward compatibility
 type TodoServer interface {
+	GetTodo(context.Context, *TodoRequest) (*TodoReply, error)
 	GetUserTodos(context.Context, *UserTodosRequest) (*UserTodosReply, error)
 	GetUserTodosWithItems(context.Context, *UserTodosRequest) (*UserTodosWithItemsReply, error)
-	GetTodoWithItems(context.Context, *TodoRequest) (*TodoWithItemsMessage, error)
+	GetTodoWithItems(context.Context, *TodoRequest) (*TodoWithItemsReply, error)
+	GetItem(context.Context, *ItemRequest) (*ItemReply, error)
 	mustEmbedUnimplementedTodoServer()
 }
 
@@ -76,14 +98,20 @@ type TodoServer interface {
 type UnimplementedTodoServer struct {
 }
 
+func (UnimplementedTodoServer) GetTodo(context.Context, *TodoRequest) (*TodoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTodo not implemented")
+}
 func (UnimplementedTodoServer) GetUserTodos(context.Context, *UserTodosRequest) (*UserTodosReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserTodos not implemented")
 }
 func (UnimplementedTodoServer) GetUserTodosWithItems(context.Context, *UserTodosRequest) (*UserTodosWithItemsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserTodosWithItems not implemented")
 }
-func (UnimplementedTodoServer) GetTodoWithItems(context.Context, *TodoRequest) (*TodoWithItemsMessage, error) {
+func (UnimplementedTodoServer) GetTodoWithItems(context.Context, *TodoRequest) (*TodoWithItemsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTodoWithItems not implemented")
+}
+func (UnimplementedTodoServer) GetItem(context.Context, *ItemRequest) (*ItemReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetItem not implemented")
 }
 func (UnimplementedTodoServer) mustEmbedUnimplementedTodoServer() {}
 
@@ -96,6 +124,24 @@ type UnsafeTodoServer interface {
 
 func RegisterTodoServer(s grpc.ServiceRegistrar, srv TodoServer) {
 	s.RegisterService(&Todo_ServiceDesc, srv)
+}
+
+func _Todo_GetTodo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TodoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoServer).GetTodo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Todo/GetTodo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoServer).GetTodo(ctx, req.(*TodoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Todo_GetUserTodos_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -152,6 +198,24 @@ func _Todo_GetTodoWithItems_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Todo_GetItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ItemRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(TodoServer).GetItem(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Todo/GetItem",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(TodoServer).GetItem(ctx, req.(*ItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Todo_ServiceDesc is the grpc.ServiceDesc for Todo service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -159,6 +223,10 @@ var Todo_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "Todo",
 	HandlerType: (*TodoServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetTodo",
+			Handler:    _Todo_GetTodo_Handler,
+		},
 		{
 			MethodName: "GetUserTodos",
 			Handler:    _Todo_GetUserTodos_Handler,
@@ -170,6 +238,10 @@ var Todo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetTodoWithItems",
 			Handler:    _Todo_GetTodoWithItems_Handler,
+		},
+		{
+			MethodName: "GetItem",
+			Handler:    _Todo_GetItem_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

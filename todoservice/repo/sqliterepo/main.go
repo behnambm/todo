@@ -60,17 +60,17 @@ func (r Repo) GetUserTodos(userId int64) ([]types.Todo, error) {
 	return todos, nil
 }
 
-func (r Repo) GetTodoItems(todoId int64) ([]types.Item, error) {
+func (r Repo) GetTodoItems(todoId int64) ([]types.MinimalItem, error) {
 	rows, err := r.db.Query(`SELECT id, title, priority FROM item WHERE todo_id = ?`, todoId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var items []types.Item
+	var items []types.MinimalItem
 
 	for rows.Next() {
-		item := types.Item{}
+		item := types.MinimalItem{}
 		if scanErr := rows.Scan(&item.ID, &item.Title, &item.Priority); scanErr != nil {
 			continue
 		}

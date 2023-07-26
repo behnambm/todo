@@ -107,10 +107,10 @@ func (g GRPCAdapter) GetUserTodosWithItems(userId int64) ([]types.TodoWithItems,
 	var todosWithItems []types.TodoWithItems
 
 	for _, todoReply := range todosReply.Todos {
-		var items []types.Item
+		var items []types.MinimalItem
 
 		for _, itemReply := range todoReply.Items {
-			items = append(items, types.Item{
+			items = append(items, types.MinimalItem{
 				ID:       itemReply.GetId(),
 				Title:    itemReply.GetTitle(),
 				Priority: int(itemReply.GetPriority()),

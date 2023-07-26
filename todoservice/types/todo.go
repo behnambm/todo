@@ -15,7 +15,13 @@ type Item struct {
 	TodoId   int64
 }
 
+type MinimalItem struct {
+	ID       int64
+	Title    string
+	Priority int
+}
+
 type TodoWithItems struct {
 	Todo
-	Items []Item
+	Items []MinimalItem
 }

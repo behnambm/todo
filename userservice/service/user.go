@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"github.com/behnambm/todo/common/utils/hash"
+	"github.com/behnambm/todo/todocommon"
 	"github.com/behnambm/todo/userservice/types"
 )
 
@@ -42,7 +42,7 @@ func (us *UserService) GetUserById(userId int64) (types.User, error) {
 
 func (us *UserService) CreateUser(user types.User) (types.User, error) {
 	// hash the plain text password
-	hashedPassword, err := hash.String(user.Password)
+	hashedPassword, err := todocommon.String(user.Password)
 	if err != nil {
 		return types.User{}, fmt.Errorf("[Service] CreateUser - %w", err)
 	}

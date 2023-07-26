@@ -1,7 +1,7 @@
 package sqliterepo
 
 import (
-	"github.com/behnambm/todo/common/utils/hash"
+	"github.com/behnambm/todo/todocommon"
 	"log"
 )
 
@@ -28,7 +28,7 @@ func CreateTables(repo *Repo) error {
 func SeedTables(repo *Repo) {
 	userEmail := "test@gmail.com"
 	name := "My Name"
-	passwordHash, hashErr := hash.String("123")
+	passwordHash, hashErr := todocommon.String("123")
 	if hashErr != nil {
 		log.Println(hashErr)
 	}

@@ -3,8 +3,8 @@ package rabbitmqadapter
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/behnambm/todo/common/types/brokertypes"
 	"github.com/behnambm/todo/gatewayservice/types"
+	"github.com/behnambm/todo/todocommon"
 	"github.com/streadway/amqp"
 	"log"
 )
@@ -35,7 +35,7 @@ func (r RabbitMQAdapter) CreateUser(user types.User) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.UserMessage{
+	msg := todocommon.UserMessage{
 		Name:     user.Name,
 		Email:    user.Email,
 		Password: user.Password,
@@ -49,7 +49,7 @@ func (r RabbitMQAdapter) CreateUser(user types.User) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeUserRegister,
+		Type:        todocommon.MessageTypeUserRegister,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.userQueueName, false, false, message)
@@ -67,7 +67,7 @@ func (r RabbitMQAdapter) CreateTodo(todo types.Todo) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.TodoMessage{
+	msg := todocommon.TodoMessage{
 		Name:        todo.Name,
 		Description: todo.Description,
 		UserId:      todo.UserId,
@@ -82,7 +82,7 @@ func (r RabbitMQAdapter) CreateTodo(todo types.Todo) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeTodoCreate,
+		Type:        todocommon.MessageTypeTodoCreate,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.todoQueueName, false, false, message)
@@ -101,7 +101,7 @@ func (r RabbitMQAdapter) UpdateTodo(todo types.Todo) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.TodoMessage{
+	msg := todocommon.TodoMessage{
 		ID:          todo.ID,
 		Name:        todo.Name,
 		Description: todo.Description,
@@ -114,7 +114,7 @@ func (r RabbitMQAdapter) UpdateTodo(todo types.Todo) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeTodoUpdate,
+		Type:        todocommon.MessageTypeTodoUpdate,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.todoQueueName, false, false, message)
@@ -133,7 +133,7 @@ func (r RabbitMQAdapter) DeleteTodo(todoId int64) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.TodoMessage{ID: todoId}
+	msg := todocommon.TodoMessage{ID: todoId}
 
 	msgBody, jsonErr := json.Marshal(msg)
 	if jsonErr != nil {
@@ -142,7 +142,7 @@ func (r RabbitMQAdapter) DeleteTodo(todoId int64) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeTodoDelete,
+		Type:        todocommon.MessageTypeTodoDelete,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.todoQueueName, false, false, message)
@@ -161,7 +161,7 @@ func (r RabbitMQAdapter) CreateItem(item types.Item) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.ItemMessage{
+	msg := todocommon.ItemMessage{
 		Title:    item.Title,
 		Priority: item.Priority,
 		TodoId:   item.TodoId,
@@ -177,7 +177,7 @@ func (r RabbitMQAdapter) CreateItem(item types.Item) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeItemCreate,
+		Type:        todocommon.MessageTypeItemCreate,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.todoQueueName, false, false, message)
@@ -196,7 +196,7 @@ func (r RabbitMQAdapter) UpdateItem(item types.Item) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.ItemMessage{
+	msg := todocommon.ItemMessage{
 		ID:       item.ID,
 		Title:    item.Title,
 		Priority: item.Priority,
@@ -211,7 +211,7 @@ func (r RabbitMQAdapter) UpdateItem(item types.Item) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeItemUpdate,
+		Type:        todocommon.MessageTypeItemUpdate,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.todoQueueName, false, false, message)
@@ -229,7 +229,7 @@ func (r RabbitMQAdapter) DeleteItem(itemId int64) error {
 	}
 	defer channelRabbitMQ.Close()
 
-	msg := brokertypes.ItemMessage{ID: itemId}
+	msg := todocommon.ItemMessage{ID: itemId}
 
 	msgBody, jsonErr := json.Marshal(msg)
 	if jsonErr != nil {
@@ -240,7 +240,7 @@ func (r RabbitMQAdapter) DeleteItem(itemId int64) error {
 	message := amqp.Publishing{
 		ContentType: "application/json",
 		Body:        msgBody,
-		Type:        brokertypes.MessageTypeItemDelete,
+		Type:        todocommon.MessageTypeItemDelete,
 	}
 
 	publishErr := channelRabbitMQ.Publish("", r.todoQueueName, false, false, message)

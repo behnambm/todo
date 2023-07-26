@@ -2,7 +2,7 @@ package service
 
 import (
 	"fmt"
-	"github.com/behnambm/todo/common/utils"
+	"github.com/behnambm/todo/todocommon"
 	"github.com/golang-jwt/jwt"
 	"log"
 )
@@ -64,7 +64,7 @@ func (s TokenService) IsValidWithClaim(tokenString string) (map[string]string, b
 	claimMap := map[string]string{}
 
 	for k, v := range claim {
-		claimMap[k] = utils.InterfaceToString(v)
+		claimMap[k] = todocommon.InterfaceToString(v)
 	}
 
 	return claimMap, claimErr == nil

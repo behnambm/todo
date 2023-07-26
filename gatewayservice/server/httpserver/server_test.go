@@ -8,9 +8,9 @@ package httpserver
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/behnambm/todo/common/utils"
 	"github.com/behnambm/todo/gatewayservice/types"
 	"github.com/behnambm/todo/gatewayservice/types/httptypes"
+	"github.com/behnambm/todo/todocommon"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -18,7 +18,7 @@ import (
 )
 
 var (
-	BaseUrl = utils.GetEnvOrPanic("HTTP_LISTEN_URL")
+	BaseUrl = todocommon.GetEnvOrPanic("HTTP_LISTEN_URL")
 )
 
 func TestRegister(t *testing.T) {
@@ -26,7 +26,7 @@ func TestRegister(t *testing.T) {
 	userId := rand.Intn(1000)
 	data := fmt.Sprintf(`{"email": "test-user%d@gmail.com", "password": "123"}`, userId)
 
-	resp, err := utils.PostJson(BaseUrl+"/user/register", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/register", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -39,7 +39,7 @@ func TestRegister(t *testing.T) {
 func TestRegister_InvalidPayload(t *testing.T) {
 	data := `{"email": "test-user@gmail.com"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/register", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/register", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -52,7 +52,7 @@ func TestRegister_InvalidPayload(t *testing.T) {
 func TestLogin(t *testing.T) {
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -65,7 +65,7 @@ func TestLogin(t *testing.T) {
 func TestLogin_InvalidPayload(t *testing.T) {
 	data := `{"email": "test@gmail.com"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -78,7 +78,7 @@ func TestLogin_InvalidPayload(t *testing.T) {
 func TestTodo_GetUserTodo(t *testing.T) {
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -91,7 +91,7 @@ func TestTodo_GetUserTodo(t *testing.T) {
 
 	// Get list of todos
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -111,7 +111,7 @@ func TestTodo_GetUserTodo(t *testing.T) {
 
 	// Get one of the todos
 
-	getTodoResp, todoGetErr := utils.GetWithAuth(fmt.Sprintf("%s/todo/%d", BaseUrl, todos[0].ID), token.Token)
+	getTodoResp, todoGetErr := todocommon.GetWithAuth(fmt.Sprintf("%s/todo/%d", BaseUrl, todos[0].ID), token.Token)
 	if todoGetErr != nil {
 		t.Fatalf("unable to make request - error: %v", todoGetErr)
 	}
@@ -127,7 +127,7 @@ func TestTodo_CreateUserTodo(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -141,7 +141,7 @@ func TestTodo_CreateUserTodo(t *testing.T) {
 	// Create new todo
 
 	todoData := fmt.Sprintf(`{"name": "%s", "description": "a description for this todo"}`, expectedTodoName)
-	createTodoResp, createTodoErr := utils.PostJsonWithAuth(BaseUrl+"/todo/", token.Token, strings.NewReader(todoData))
+	createTodoResp, createTodoErr := todocommon.PostJsonWithAuth(BaseUrl+"/todo/", token.Token, strings.NewReader(todoData))
 	if createTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", createTodoErr)
 	}
@@ -152,7 +152,7 @@ func TestTodo_CreateUserTodo(t *testing.T) {
 
 	// Get list of todos to check if the new todos is created
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -187,7 +187,7 @@ func TestTodo_UpdateUserTodo(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -201,7 +201,7 @@ func TestTodo_UpdateUserTodo(t *testing.T) {
 	// Create new todo
 
 	todoData := fmt.Sprintf(`{"name": "%s", "description": "a description for this todo"}`, expectedTodoName)
-	createTodoResp, createTodoErr := utils.PostJsonWithAuth(BaseUrl+"/todo/", token.Token, strings.NewReader(todoData))
+	createTodoResp, createTodoErr := todocommon.PostJsonWithAuth(BaseUrl+"/todo/", token.Token, strings.NewReader(todoData))
 	if createTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", createTodoErr)
 	}
@@ -212,7 +212,7 @@ func TestTodo_UpdateUserTodo(t *testing.T) {
 
 	// Get list of todos to get the ID of a new todo in order to update it
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -241,7 +241,7 @@ func TestTodo_UpdateUserTodo(t *testing.T) {
 	todoUpdateData := fmt.Sprintf(
 		`{"name": "%s", "description": "a description for this todo"}`, expectedTodoNameAfterUpdate,
 	)
-	updateResp, updateTodoErr := utils.PutJsonWithAuth(
+	updateResp, updateTodoErr := todocommon.PutJsonWithAuth(
 		BaseUrl+"/todo/"+strconv.Itoa(toBeUpdatedTodoId), token.Token, strings.NewReader(todoUpdateData),
 	)
 	if updateTodoErr != nil {
@@ -254,7 +254,7 @@ func TestTodo_UpdateUserTodo(t *testing.T) {
 
 	// Get todo to check if the todo updated or not
 
-	getTodoResp, todoGetErr := utils.GetWithAuth(fmt.Sprintf("%s/todo/%d", BaseUrl, toBeUpdatedTodoId), token.Token)
+	getTodoResp, todoGetErr := todocommon.GetWithAuth(fmt.Sprintf("%s/todo/%d", BaseUrl, toBeUpdatedTodoId), token.Token)
 	if todoGetErr != nil {
 		t.Fatalf("unable to make request - error: %v", todoGetErr)
 	}
@@ -280,7 +280,7 @@ func TestTodo_DeleteUserTodo(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -294,7 +294,7 @@ func TestTodo_DeleteUserTodo(t *testing.T) {
 	// Create new todo
 
 	todoData := fmt.Sprintf(`{"name": "%s", "description": "a description for this todo"}`, expectedTodoName)
-	createTodoResp, createTodoErr := utils.PostJsonWithAuth(BaseUrl+"/todo/", token.Token, strings.NewReader(todoData))
+	createTodoResp, createTodoErr := todocommon.PostJsonWithAuth(BaseUrl+"/todo/", token.Token, strings.NewReader(todoData))
 	if createTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", createTodoErr)
 	}
@@ -305,7 +305,7 @@ func TestTodo_DeleteUserTodo(t *testing.T) {
 
 	// Get list of todos to get the ID of a new todo in order to update it
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -331,7 +331,7 @@ func TestTodo_DeleteUserTodo(t *testing.T) {
 
 	// delete the new todo
 
-	deleteResp, deleteTodoErr := utils.DeleteWithAuth(BaseUrl+"/todo/"+strconv.Itoa(toBeDeletedTodoId), token.Token)
+	deleteResp, deleteTodoErr := todocommon.DeleteWithAuth(BaseUrl+"/todo/"+strconv.Itoa(toBeDeletedTodoId), token.Token)
 	if deleteTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", deleteTodoErr)
 	}
@@ -342,7 +342,7 @@ func TestTodo_DeleteUserTodo(t *testing.T) {
 
 	// Get todo to check if the todo deleted or not
 
-	getTodoResp, todoGetErr := utils.GetWithAuth(fmt.Sprintf("%s/todo/%d", BaseUrl, toBeDeletedTodoId), token.Token)
+	getTodoResp, todoGetErr := todocommon.GetWithAuth(fmt.Sprintf("%s/todo/%d", BaseUrl, toBeDeletedTodoId), token.Token)
 	if todoGetErr != nil {
 		t.Fatalf("unable to make request - error: %v", todoGetErr)
 	}
@@ -357,7 +357,7 @@ func TestItem_GetItem(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -370,7 +370,7 @@ func TestItem_GetItem(t *testing.T) {
 
 	// Get list of todos
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -391,7 +391,7 @@ func TestItem_GetItem(t *testing.T) {
 
 	// Get one of the items
 
-	getItemResp, itemGetErr := utils.GetWithAuth(fmt.Sprintf("%s/todo/item/%d", BaseUrl, itemIdToGet), token.Token)
+	getItemResp, itemGetErr := todocommon.GetWithAuth(fmt.Sprintf("%s/todo/item/%d", BaseUrl, itemIdToGet), token.Token)
 	if itemGetErr != nil {
 		t.Fatalf("unable to make request - error: %v", itemGetErr)
 	}
@@ -407,7 +407,7 @@ func TestItem_CreateItem(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -420,7 +420,7 @@ func TestItem_CreateItem(t *testing.T) {
 
 	// Get list of todos
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -442,7 +442,7 @@ func TestItem_CreateItem(t *testing.T) {
 	// Create new item
 
 	itemData := fmt.Sprintf(`{"title": "My first item", "todoId": %d, "priority": 1}`, todoIdToCreateItem)
-	itemCreateResp, itemCreateErr := utils.PostJsonWithAuth(
+	itemCreateResp, itemCreateErr := todocommon.PostJsonWithAuth(
 		fmt.Sprintf("%s/todo/item/", BaseUrl), token.Token, strings.NewReader(itemData),
 	)
 	if itemCreateErr != nil {
@@ -461,7 +461,7 @@ func TestItem_UpdateItem(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -474,7 +474,7 @@ func TestItem_UpdateItem(t *testing.T) {
 
 	// Get list of todos
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -504,7 +504,7 @@ func TestItem_UpdateItem(t *testing.T) {
 	// update the item
 
 	itemData := fmt.Sprintf(`{"title": "%s", "todoId": %d, "priority": 1}`, newItemTitleAfterUpdate, toBeUpdatedItemTodoId)
-	itemUpdateResp, itemUpdateErr := utils.PutJsonWithAuth(
+	itemUpdateResp, itemUpdateErr := todocommon.PutJsonWithAuth(
 		fmt.Sprintf("%s/todo/item/%d", BaseUrl, toBeUpdatedItemId), token.Token, strings.NewReader(itemData),
 	)
 	if itemUpdateErr != nil {
@@ -517,7 +517,7 @@ func TestItem_UpdateItem(t *testing.T) {
 
 	// Get list of todos to check if the item updated or not
 
-	todoResp, getTodoErr = utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr = todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -549,7 +549,7 @@ func TestItem_DeleteItem(t *testing.T) {
 
 	data := `{"email": "test@gmail.com", "password": "123"}`
 
-	resp, err := utils.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
+	resp, err := todocommon.PostJson(BaseUrl+"/user/login", strings.NewReader(data))
 	if err != nil {
 		t.Fatalf("unable to make request - error: %v", err)
 	}
@@ -562,7 +562,7 @@ func TestItem_DeleteItem(t *testing.T) {
 
 	// Get list of todos
 
-	todoResp, getTodoErr := utils.GetWithAuth(BaseUrl+"/todo/", token.Token)
+	todoResp, getTodoErr := todocommon.GetWithAuth(BaseUrl+"/todo/", token.Token)
 	if getTodoErr != nil {
 		t.Fatalf("unable to make request - error: %v", getTodoErr)
 	}
@@ -588,7 +588,7 @@ func TestItem_DeleteItem(t *testing.T) {
 
 	// delete the item
 
-	itemDeleteResp, itemDeleteErr := utils.DeleteWithAuth(
+	itemDeleteResp, itemDeleteErr := todocommon.DeleteWithAuth(
 		fmt.Sprintf("%s/todo/item/%d", BaseUrl, toBeDeletedItemId), token.Token,
 	)
 	if itemDeleteErr != nil {

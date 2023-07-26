@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/behnambm/todo/common/types/brokertypes"
+	"github.com/behnambm/todo/todocommon"
 	"github.com/behnambm/todo/todoservice/types"
 	"github.com/streadway/amqp"
 	"log"
@@ -83,17 +83,17 @@ func (b Broker) Listen(ctx context.Context) {
 // HandleMessage is used to call the appropriate handler based on the message typ
 func (b Broker) HandleMessage(message amqp.Delivery) {
 	switch message.Type {
-	case brokertypes.MessageTypeTodoCreate:
+	case todocommon.MessageTypeTodoCreate:
 		b.HandleTodoCreate(message)
-	case brokertypes.MessageTypeTodoUpdate:
+	case todocommon.MessageTypeTodoUpdate:
 		b.HandleTodoUpdate(message)
-	case brokertypes.MessageTypeItemCreate:
+	case todocommon.MessageTypeItemCreate:
 		b.HandleItemCreate(message)
-	case brokertypes.MessageTypeItemUpdate:
+	case todocommon.MessageTypeItemUpdate:
 		b.HandleItemUpdate(message)
-	case brokertypes.MessageTypeTodoDelete:
+	case todocommon.MessageTypeTodoDelete:
 		b.HandleTodoDelete(message)
-	case brokertypes.MessageTypeItemDelete:
+	case todocommon.MessageTypeItemDelete:
 		b.HandleItemDelete(message)
 	default:
 		log.Println("[Broker] unable to process message with type: ", message.Type)
@@ -101,7 +101,7 @@ func (b Broker) HandleMessage(message amqp.Delivery) {
 }
 
 func (b Broker) HandleTodoCreate(message amqp.Delivery) {
-	todoMsg := brokertypes.TodoMessage{}
+	todoMsg := todocommon.TodoMessage{}
 	if err := json.Unmarshal(message.Body, &todoMsg); err != nil {
 		log.Println("[Broker] HandleTodoCreate - unable to unmarshal the message: ", err)
 		// Reject the message since it couldn't be processed correctly & do not queue it again
@@ -136,7 +136,7 @@ func (b Broker) HandleTodoCreate(message amqp.Delivery) {
 }
 
 func (b Broker) HandleTodoUpdate(message amqp.Delivery) {
-	todoMsg := brokertypes.TodoMessage{}
+	todoMsg := todocommon.TodoMessage{}
 	if err := json.Unmarshal(message.Body, &todoMsg); err != nil {
 		log.Println("[Broker] HandleTodoUpdate - unable to unmarshal the message: ", err)
 		message.Reject(false)
@@ -169,7 +169,7 @@ func (b Broker) HandleTodoUpdate(message amqp.Delivery) {
 }
 
 func (b Broker) HandleTodoDelete(message amqp.Delivery) {
-	todoMsg := brokertypes.TodoMessage{}
+	todoMsg := todocommon.TodoMessage{}
 	if err := json.Unmarshal(message.Body, &todoMsg); err != nil {
 		log.Println("[Broker] HandleTodoDelete - unable to unmarshal the message: ", err)
 		message.Reject(false)
@@ -196,7 +196,7 @@ func (b Broker) HandleTodoDelete(message amqp.Delivery) {
 }
 
 func (b Broker) HandleItemCreate(message amqp.Delivery) {
-	itemMsg := brokertypes.ItemMessage{}
+	itemMsg := todocommon.ItemMessage{}
 	if err := json.Unmarshal(message.Body, &itemMsg); err != nil {
 		log.Println("[Broker] HandleItemCreate - unable to unmarshal the message: ", err)
 
@@ -230,7 +230,7 @@ func (b Broker) HandleItemCreate(message amqp.Delivery) {
 }
 
 func (b Broker) HandleItemUpdate(message amqp.Delivery) {
-	itemMsg := brokertypes.ItemMessage{}
+	itemMsg := todocommon.ItemMessage{}
 	if err := json.Unmarshal(message.Body, &itemMsg); err != nil {
 		log.Println("[Broker] HandleItemUpdate - unable to unmarshal the message: ", err)
 		message.Reject(false)
@@ -263,7 +263,7 @@ func (b Broker) HandleItemUpdate(message amqp.Delivery) {
 }
 
 func (b Broker) HandleItemDelete(message amqp.Delivery) {
-	itemMsg := brokertypes.ItemMessage{}
+	itemMsg := todocommon.ItemMessage{}
 	if err := json.Unmarshal(message.Body, &itemMsg); err != nil {
 		log.Println("[Broker] HandleItemDelete - unable to unmarshal the message: ", err)
 		message.Reject(false)

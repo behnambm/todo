@@ -2,8 +2,8 @@ package authservice
 
 import (
 	"fmt"
-	"github.com/behnambm/todo/common/utils/hash"
 	"github.com/behnambm/todo/gatewayservice/types"
+	"github.com/behnambm/todo/todocommon"
 	"log"
 )
 
@@ -35,7 +35,7 @@ func (s AuthService) LoginUser(email string, password string) (string, error) {
 		return "", fmt.Errorf("[AUTH SERVICE] LoginUser - unable to fetch user - %w", err)
 	}
 
-	hashedInputPassword, hashErr := hash.String(password)
+	hashedInputPassword, hashErr := todocommon.String(password)
 	if hashErr != nil {
 		log.Println("[AUTH SERVICE] LoginUser - unable to hash password ", hashErr)
 

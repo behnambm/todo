@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/behnambm/todo/common/types/brokertypes"
+	"github.com/behnambm/todo/todocommon"
 	"github.com/behnambm/todo/userservice/types"
 	"github.com/streadway/amqp"
 	"log"
@@ -75,7 +75,7 @@ func (b Broker) Listen(ctx context.Context) {
 
 func (b Broker) HandleMessage(message amqp.Delivery) {
 	switch message.Type {
-	case brokertypes.MessageTypeUserRegister:
+	case todocommon.MessageTypeUserRegister:
 		b.HandleRegisterMessage(message)
 	default:
 		log.Println("[Broker] HandleMessage - unable to process message with type: ", message.Type)
@@ -84,7 +84,7 @@ func (b Broker) HandleMessage(message amqp.Delivery) {
 }
 
 func (b Broker) HandleRegisterMessage(message amqp.Delivery) {
-	userMsg := brokertypes.UserMessage{}
+	userMsg := todocommon.UserMessage{}
 	err := json.Unmarshal(message.Body, &userMsg)
 	if err != nil {
 		log.Println("[Broker] HandleRegisterMessage - unable to unmarshal the message: ", err)

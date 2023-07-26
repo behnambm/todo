@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/behnambm/todo/authservice/server/grpcserver"
 	"github.com/behnambm/todo/authservice/service"
-	"github.com/behnambm/todo/common/utils"
+	"github.com/behnambm/todo/todocommon"
 	"log"
 	"os"
 	"os/signal"
@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	GRPCListenPort = utils.GetEnvOrPanic("GRPC_LISTEN_PORT")
-	JWTSecret      = utils.GetEnvOrPanic("JWT_SECRET")
+	GRPCListenPort = todocommon.GetEnvOrPanic("GRPC_LISTEN_PORT")
+	JWTSecret      = todocommon.GetEnvOrPanic("JWT_SECRET")
 )
 
 func main() {

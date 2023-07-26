@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/behnambm/todo/common/utils"
+	"github.com/behnambm/todo/todocommon"
 	"github.com/behnambm/todo/userservice/broker/rabbitmq"
 	"github.com/behnambm/todo/userservice/repo/sqliterepo"
 	"github.com/behnambm/todo/userservice/server/grpcserver"
@@ -15,9 +15,9 @@ import (
 )
 
 var (
-	GRPCListenPort  = utils.GetEnvOrPanic("GRPC_LISTEN_PORT")
-	AMQPServerUri   = utils.GetEnvOrPanic("AMQP_SERVER_URI")
-	BrokerUserQueue = utils.GetEnvOrPanic("BROKER_USER_QUEUE")
+	GRPCListenPort  = todocommon.GetEnvOrPanic("GRPC_LISTEN_PORT")
+	AMQPServerUri   = todocommon.GetEnvOrPanic("AMQP_SERVER_URI")
+	BrokerUserQueue = todocommon.GetEnvOrPanic("BROKER_USER_QUEUE")
 )
 
 func main() {

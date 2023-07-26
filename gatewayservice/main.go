@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/behnambm/todo/common/utils"
 	"github.com/behnambm/todo/gatewayservice/adapter/grpcadapter"
 	"github.com/behnambm/todo/gatewayservice/adapter/rabbitmqadapter"
 	"github.com/behnambm/todo/gatewayservice/server/httpserver"
 	"github.com/behnambm/todo/gatewayservice/service/authservice"
 	"github.com/behnambm/todo/gatewayservice/service/todoservice"
 	"github.com/behnambm/todo/gatewayservice/service/userservice"
+	"github.com/behnambm/todo/todocommon"
 	"log"
 	"os"
 	"os/signal"
@@ -16,13 +16,13 @@ import (
 )
 
 var (
-	HttpListenPort     = utils.GetEnvOrPanic("HTTP_LISTEN_PORT")
-	AMQPServerUri      = utils.GetEnvOrPanic("AMQP_SERVER_URI")
-	BrokerUserQueue    = utils.GetEnvOrPanic("BROKER_USER_QUEUE")
-	BrokerTodoQueue    = utils.GetEnvOrPanic("BROKER_TODO_QUEUE")
-	UserGRPCServiceURL = utils.GetEnvOrPanic("USER_SERVICE_GRPC_URL")
-	AuthGRPCServiceURL = utils.GetEnvOrPanic("AUTH_SERVICE_GRPC_URL")
-	TodoGRPCServiceURL = utils.GetEnvOrPanic("TODO_SERVICE_GRPC_URL")
+	HttpListenPort     = todocommon.GetEnvOrPanic("HTTP_LISTEN_PORT")
+	AMQPServerUri      = todocommon.GetEnvOrPanic("AMQP_SERVER_URI")
+	BrokerUserQueue    = todocommon.GetEnvOrPanic("BROKER_USER_QUEUE")
+	BrokerTodoQueue    = todocommon.GetEnvOrPanic("BROKER_TODO_QUEUE")
+	UserGRPCServiceURL = todocommon.GetEnvOrPanic("USER_SERVICE_GRPC_URL")
+	AuthGRPCServiceURL = todocommon.GetEnvOrPanic("AUTH_SERVICE_GRPC_URL")
+	TodoGRPCServiceURL = todocommon.GetEnvOrPanic("TODO_SERVICE_GRPC_URL")
 )
 
 func main() {
@@ -45,7 +45,7 @@ func main() {
 	authService := authservice.New(rabbitmqAdapter, gRPCAdapter)
 	userService := userservice.New(rabbitmqAdapter, gRPCAdapter)
 	todoService := todoservice.New(rabbitmqAdapter, gRPCAdapter)
-	server := httpserver.New(":2020", authService, userService, todoService)
+	server := httpserver.New(":"+HttpListenPort, authService, userService, todoService)
 
 	server.Run(ctx)
 }

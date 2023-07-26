@@ -2,12 +2,9 @@ module github.com/behnambm/todo/authservice
 
 go 1.20
 
-replace github.com/behnambm/todo/common => /home/behnam/go/src/github.com/behnambm/todo/common
-
 require (
-	github.com/behnambm/todo/common v0.0.0-00010101000000-000000000000
+	github.com/behnambm/todo/todocommon v0.0.0-20230726200434-3b9f5c4795a4
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/streadway/amqp v1.1.0
 	google.golang.org/grpc v1.56.2
 	google.golang.org/protobuf v1.31.0
 )

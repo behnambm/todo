@@ -1,3 +1,5 @@
+github.com/behnambm/todo/todocommon v0.0.0-20230726200434-3b9f5c4795a4 h1:59ZfBPAU0qnrHqU8RH6OW27mM/iveMv3OUA5e0i0KSw=
+github.com/behnambm/todo/todocommon v0.0.0-20230726200434-3b9f5c4795a4/go.mod h1:xOkJr9ryJAfD6R0XEr3rsR/jGuOUlh8FfhBxF3S5lr0=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=
 github.com/golang/protobuf v1.5.3 h1:KhyjKVUg7Usr/dYsdSqoFveMYd5ko72D+zANwlG1mmg=
 github.com/golang/protobuf v1.5.3/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiuN0vRsmY=

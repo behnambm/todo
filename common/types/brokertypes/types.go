@@ -17,16 +17,16 @@ type UserMessage struct {
 }
 
 type TodoMessage struct {
-	ID          int    `json:"id"`
+	ID          int64  `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
-	UserId      int    `json:"userId"`
+	UserId      int64  `json:"userId"`
 }
 
 type ItemMessage struct {
-	ID       int    `json:"id"`
+	ID       int64  `json:"id"`
 	Title    string `json:"title"`
 	Priority int    `json:"priority"`
-	UserId   int    `json:"userId"`
-	TodoId   int    `json:"todoId"`
+	UserId   int64  `json:"userId"`
+	TodoId   int64  `json:"todoId"`
 }

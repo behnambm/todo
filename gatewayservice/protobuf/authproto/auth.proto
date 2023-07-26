@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = "github.com/behnambm/todo/gatewayservice/protobuf/authproto";
+
+// The Token service definition.
+service Auth {
+  rpc IsTokenValid (TokenRequest) returns (TokenReply) {}
+  rpc GetToken (GetTokenRequest) returns (GetTokenReply) {}
+  rpc ValidateTokenWithClaims (ValidateTokenWithClaimsRequest) returns (ValidateTokenWithClaimsReply) {}
+}
+
+message TokenRequest {
+  string token = 1;
+}
+
+message TokenReply {
+  bool isValid = 1;
+}
+
+message GetTokenRequest {
+  int64 userid = 1;
+}
+
+message GetTokenReply {
+  string token = 1;
+}
+
+message ValidateTokenWithClaimsRequest {
+  string token = 1;
+}
+
+message  ValidateTokenWithClaimsReply {
+  map<string, string> claims = 1;
+  bool isValid = 2;
+}

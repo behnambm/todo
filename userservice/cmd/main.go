@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/behnambm/todo/userservice/repo/sqliterepo"
+	"log"
 )
 
 func main() {
@@ -13,7 +14,7 @@ func main() {
 
 	if *initDBFlag {
 		if err := sqliterepo.CreateTables(sqliteRepo); err != nil {
-			panic(err)
+			log.Fatalln(err)
 		}
 		sqliterepo.SeedTables(sqliteRepo)
 

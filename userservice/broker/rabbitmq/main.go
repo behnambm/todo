@@ -24,7 +24,7 @@ func New(amqpUri, queueName string, userSvc UserService) *Broker {
 	// Create a new RabbitMQ connection.
 	connectRabbitMQ, err := amqp.Dial(amqpUri)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	log.Println("[Broker] Successfully connected to RabbitMQ")
@@ -39,7 +39,7 @@ func New(amqpUri, queueName string, userSvc UserService) *Broker {
 func (b Broker) Listen(ctx context.Context) {
 	channelRabbitMQ, channelErr := b.conn.Channel()
 	if channelErr != nil {
-		panic(channelErr)
+		log.Fatalln(channelErr)
 	}
 	defer channelRabbitMQ.Close()
 

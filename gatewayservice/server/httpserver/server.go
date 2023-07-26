@@ -122,7 +122,7 @@ func (s Server) Register(c echo.Context) error {
 	if err != nil {
 		log.Println("[HTTP] Register - failed to register user -", err)
 
-		return c.JSON(http.StatusForbidden, httptypes.BadRequestResponse{Error: "register  failed"})
+		return c.JSON(http.StatusBadRequest, httptypes.BadRequestResponse{Error: "register  failed"})
 	}
 
 	return c.JSON(http.StatusCreated, httptypes.Response{Message: "register was successful"})

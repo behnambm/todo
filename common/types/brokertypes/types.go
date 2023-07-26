@@ -4,8 +4,10 @@ const (
 	MessageTypeUserRegister = "mt_us_r"
 	MessageTypeTodoCreate   = "mt_td_c"
 	MessageTypeTodoUpdate   = "mt_td_u"
+	MessageTypeTodoDelete   = "mt_td_d"
 	MessageTypeItemCreate   = "mt_it_c"
 	MessageTypeItemUpdate   = "mt_it_u"
+	MessageTypeItemDelete   = "mt_it_d"
 )
 
 type UserMessage struct {

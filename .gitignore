@@ -3,3 +3,4 @@ rabbitmq/data/
 rabbitmq/log/
 *.out
 .env
+*.db

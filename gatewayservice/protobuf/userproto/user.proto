@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option go_package = "github.com/behnambm/todo/gatewayservice/protobuf/userproto"; // Don't forget to change!
+
+
+service User {
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserReply) {}
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserReply) {}
+}
+
+message GetUserByEmailRequest {
+  string email = 1;
+}
+
+message GetUserByIdRequest {
+  int64 userId = 1;
+}
+
+message GetUserReply {
+  string name = 1;
+  string email = 2;
+  int64 id = 3;
+  string password = 4;
+}

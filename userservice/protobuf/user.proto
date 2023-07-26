@@ -3,18 +3,20 @@ syntax = "proto3";
 option go_package = "github.com/behnambm/todo/userservice"; // Don't forget to change!
 
 
-// The User service definition.
 service User {
-  rpc GetUserByEmail (UserRequest) returns (UserReply) {}
+  rpc GetUserByEmail (GetUserByEmailRequest) returns (GetUserReply) {}
+  rpc GetUserById (GetUserByIdRequest) returns (GetUserReply) {}
 }
 
-// The request message containing the user's name.
-message UserRequest {
+message GetUserByEmailRequest {
   string email = 1;
 }
 
-// The response message containing the User
-message UserReply {
+message GetUserByIdRequest {
+  int64 userId = 1;
+}
+
+message GetUserReply {
   string name = 1;
   string email = 2;
   int64 id = 3;

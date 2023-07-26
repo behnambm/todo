@@ -1,0 +1,8 @@
+### Required env
+
+AMQP_SERVER_URL
+
+BROKER_USER_QUEUE
+
+GRPC_LISTEN_PORT
+

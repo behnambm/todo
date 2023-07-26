@@ -13,8 +13,10 @@ import (
 type TodoService interface {
 	CreateTodo(types.Todo) (types.Todo, error)
 	UpdateTodo(types.Todo) (types.Todo, error)
+	DeleteTodo(int64) error
 	CreateItem(types.Item) (types.Item, error)
 	UpdateItem(types.Item) (types.Item, error)
+	DeleteItem(int64) error
 }
 
 type Broker struct {
@@ -27,7 +29,7 @@ func New(amqpUri, queueName string, todoService TodoService) *Broker {
 	// Create a new RabbitMQ connection.
 	connectRabbitMQ, err := amqp.Dial(amqpUri)
 	if err != nil {
-		panic(err)
+		log.Fatalln(err)
 	}
 
 	log.Println("Successfully connected to RabbitMQ")
@@ -44,7 +46,7 @@ func New(amqpUri, queueName string, todoService TodoService) *Broker {
 func (b Broker) Listen(ctx context.Context) {
 	channelRabbitMQ, channelErr := b.conn.Channel()
 	if channelErr != nil {
-		panic(channelErr)
+		log.Fatalln(channelErr)
 	}
 	defer channelRabbitMQ.Close()
 
@@ -89,6 +91,10 @@ func (b Broker) HandleMessage(message amqp.Delivery) {
 		b.HandleItemCreate(message)
 	case brokertypes.MessageTypeItemUpdate:
 		b.HandleItemUpdate(message)
+	case brokertypes.MessageTypeTodoDelete:
+		b.HandleTodoDelete(message)
+	case brokertypes.MessageTypeItemDelete:
+		b.HandleItemDelete(message)
 	default:
 		log.Println("[Broker] unable to process message with type: ", message.Type)
 	}
@@ -111,9 +117,9 @@ func (b Broker) HandleTodoCreate(message amqp.Delivery) {
 		UserId:      todoMsg.UserId,
 	}
 
-	newTodo, userCreateErr := b.todoSvc.UpdateTodo(todoToBeCreated)
-	if userCreateErr != nil {
-		log.Println("[Broker] HandleTodoCreate - unable create todo: ", userCreateErr)
+	newTodo, todoUpdateErr := b.todoSvc.CreateTodo(todoToBeCreated)
+	if todoUpdateErr != nil {
+		log.Println("[Broker] HandleTodoCreate - unable create todo: ", todoUpdateErr)
 		message.Reject(false)
 
 		return
@@ -144,9 +150,9 @@ func (b Broker) HandleTodoUpdate(message amqp.Delivery) {
 		ID:          todoMsg.ID,
 	}
 
-	newTodo, userUpdateErr := b.todoSvc.UpdateTodo(toBeUpdatedTodo)
-	if userUpdateErr != nil {
-		log.Println("[Broker] HandleTodoUpdate - unable update todo: ", userUpdateErr)
+	newTodo, todoUpdateErr := b.todoSvc.UpdateTodo(toBeUpdatedTodo)
+	if todoUpdateErr != nil {
+		log.Println("[Broker] HandleTodoUpdate - unable update todo: ", todoUpdateErr)
 		message.Reject(false)
 
 		return
@@ -157,6 +163,33 @@ func (b Broker) HandleTodoUpdate(message amqp.Delivery) {
 	ackErr := message.Ack(false)
 	if ackErr != nil {
 		log.Println("[Broker] HandleTodoUpdate - unable to ack: ", ackErr)
+
+		return
+	}
+}
+
+func (b Broker) HandleTodoDelete(message amqp.Delivery) {
+	todoMsg := brokertypes.TodoMessage{}
+	if err := json.Unmarshal(message.Body, &todoMsg); err != nil {
+		log.Println("[Broker] HandleTodoDelete - unable to unmarshal the message: ", err)
+		message.Reject(false)
+
+		return
+	}
+
+	todoUpdateErr := b.todoSvc.DeleteTodo(todoMsg.ID)
+	if todoUpdateErr != nil {
+		log.Println("[Broker] HandleTodoDelete - unable to delete todo: ", todoUpdateErr)
+		message.Reject(false)
+
+		return
+	}
+
+	fmt.Printf("[Broker] HandleTodoDelete - todo %d deleted \n", todoMsg.ID)
+
+	ackErr := message.Ack(false)
+	if ackErr != nil {
+		log.Println("[Broker] HandleTodoDelete - unable to ack: ", ackErr)
 
 		return
 	}
@@ -209,8 +242,6 @@ func (b Broker) HandleItemUpdate(message amqp.Delivery) {
 		ID:       itemMsg.ID,
 		Title:    itemMsg.Title,
 		Priority: itemMsg.Priority,
-		TodoId:   itemMsg.TodoId,
-		UserId:   itemMsg.UserId,
 	}
 
 	newItem, itemUpdateErr := b.todoSvc.UpdateItem(toBeUpdatedItem)
@@ -226,6 +257,33 @@ func (b Broker) HandleItemUpdate(message amqp.Delivery) {
 	ackErr := message.Ack(false)
 	if ackErr != nil {
 		log.Println("[Broker] HandleItemUpdate - unable to ack: ", ackErr)
+
+		return
+	}
+}
+
+func (b Broker) HandleItemDelete(message amqp.Delivery) {
+	itemMsg := brokertypes.ItemMessage{}
+	if err := json.Unmarshal(message.Body, &itemMsg); err != nil {
+		log.Println("[Broker] HandleItemDelete - unable to unmarshal the message: ", err)
+		message.Reject(false)
+
+		return
+	}
+
+	itemUpdateErr := b.todoSvc.DeleteItem(itemMsg.ID)
+	if itemUpdateErr != nil {
+		log.Println("[Broker] HandleItemDelete - unable to delete item: ", itemUpdateErr)
+		message.Reject(false)
+
+		return
+	}
+
+	fmt.Printf("[Broker] HandleItemDelete - item %d deleted \n", itemMsg.ID)
+
+	ackErr := message.Ack(false)
+	if ackErr != nil {
+		log.Println("[Broker] HandleItemDelete - unable to ack: ", ackErr)
 
 		return
 	}

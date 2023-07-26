@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/behnambm/todo/authservice/server/grpcserver"
 	"github.com/behnambm/todo/authservice/service"
+	"github.com/behnambm/todo/common/utils"
 	"log"
 	"os"
 	"os/signal"
@@ -12,13 +13,11 @@ import (
 )
 
 var (
-	GRPCListenPort = os.Getenv("GRPC_LISTEN_PORT")
-	JWTSecret      = os.Getenv("JWT_SECRET")
+	GRPCListenPort = utils.GetEnvOrPanic("GRPC_LISTEN_PORT")
+	JWTSecret      = utils.GetEnvOrPanic("JWT_SECRET")
 )
 
 func main() {
-	checkEnvs()
-
 	ctx, cancel := context.WithCancel(context.Background())
 	sigCh := make(chan os.Signal)
 	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
@@ -37,13 +36,4 @@ func main() {
 	tokenService := service.New(JWTSecret)
 	server := grpcserver.New(fmt.Sprintf(":%s", GRPCListenPort), tokenService)
 	server.Run(ctx)
-}
-
-func checkEnvs() {
-	if GRPCListenPort == "" {
-		log.Fatalf("invalid GRPC_LISTEN_PORT ")
-	}
-	if JWTSecret == "" {
-		log.Fatalf("invalid JWT_SECRET ")
-	}
 }

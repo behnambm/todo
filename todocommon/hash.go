@@ -1,4 +1,4 @@
-package hash
+package todocommon
 
 import (
 	"crypto/sha256"

@@ -1,4 +1,4 @@
-package brokertypes
+package todocommon
 
 const (
 	MessageTypeUserRegister = "mt_us_r"

@@ -1,0 +1,1661 @@
+{
+	"info": {
+		"_postman_id": "f006ea98-66cb-4ea0-8c9b-7dc5664f27e7",
+		"name": "Todo - http",
+		"description": "This collection will provide you an overview of how the Todo API looks like\n\nThere are examples for each request",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7250373"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Your test name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.collectionVariables.set(\"AuthToken\", jsonData.token);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/user/login",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful login",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/user/login",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 10:34:00 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "106"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjF9.mxHFBqo2EtU20ygKLgD8NvuCcTJnzUNAxbLoPc5xYZo\"\n}"
+				},
+				{
+					"name": "Invalid credentials",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"email\": \"TEST@gmail.com\",\n    \"password\": \"123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/user/login",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 10:34:27 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "32"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"invalid credentials\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "\n{\n    \"email\": \"behnam@gmail.com\",\n    \"password\": \"123\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/user/register",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Already registered user",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/user/register",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 10:35:32 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "29"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"register  failed\"\n}"
+				},
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"email\": \"behnam@gmail.com\",\n    \"password\": \"123\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/user/register",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 10:35:59 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "38"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"register was successful\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Todo List",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Host}}/todo/",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "List of current user todos",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 10:43:10 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "220"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"ID\": 1,\n        \"Name\": \"My Todo List\",\n        \"Description\": \"This is my first todo list.\",\n        \"UserId\": 1,\n        \"Items\": [\n            {\n                \"ID\": 1,\n                \"Title\": \"Item 1\",\n                \"Priority\": 2,\n                \"UserId\": 0,\n                \"TodoId\": 0\n            },\n            {\n                \"ID\": 2,\n                \"Title\": \"Item 2\",\n                \"Priority\": 1,\n                \"UserId\": 0,\n                \"TodoId\": 0\n            }\n        ]\n    }\n]"
+				},
+				{
+					"name": "Without credentials",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								""
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 10:43:50 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"access denied\"\n}"
+				},
+				{
+					"name": "With invalid token",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								""
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:33:00 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"access denied\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get todo",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Host}}/todo/1",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"1"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:14:01 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "86"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"ID\": 1,\n    \"Name\": \"My Todo List\",\n    \"Description\": \"This is my first todo list.\",\n    \"UserId\": 1\n}"
+				},
+				{
+					"name": "Not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/12",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"12"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:14:15 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "27"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"todo not found\"\n}"
+				},
+				{
+					"name": "Forbidden access",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"1"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:34:17 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"access denied\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Todo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"My very first todo\",\n    \"description\": \"some description for my first todo\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/todo/",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My very first todo\",\n    \"description\": \"some description for my first todo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:15:07 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "43"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"todo creation was successful\"\n}"
+				},
+				{
+					"name": "With invalid payload",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"My very first todo\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								""
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:33:48 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"invalid data\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Todo",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"A new name for my todo\",\n    \"description\": \"new description\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/todo/2",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"2"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful update",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A new name for my todo\",\n    \"description\": \"new description\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"2"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:35:41 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"todo update was successful\"\n}"
+				},
+				{
+					"name": "Forbidden access",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A new name for my todo\",\n    \"description\": \"new description\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"1"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:38:07 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"access denied\"\n}"
+				},
+				{
+					"name": "With invalid payload",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A new name for my todo\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"2"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 11:39:25 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"invalid data\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Todo",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Host}}/todo/2",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"2"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Forbidden access",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"1"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:04:36 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"access denied\"\n}"
+				},
+				{
+					"name": "Not found",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/12",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"12"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:05:40 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "32"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"todo does not exist\"\n}"
+				},
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/2",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"2"
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:06:04 GMT"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Get Item",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Host}}/todo/item/3",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"item",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/item/3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"3"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:09:24 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "68"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"ID\": 3,\n    \"Title\": \"My first item\",\n    \"Priority\": 1,\n    \"UserId\": 2,\n    \"TodoId\": 3\n}"
+				},
+				{
+					"name": "Forbidden access",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/item/1",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"1"
+							]
+						}
+					},
+					"status": "Forbidden",
+					"code": 403,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:07:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "26"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"access denied\"\n}"
+				},
+				{
+					"name": "Not found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/item/12",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"12"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:08:16 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "27"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"todo not found\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Item",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"My first item\",\n    \"todoId\": 2,\n    \"priority\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/todo/item/",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"item",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"My first item\",\n    \"todoId\": 3,\n    \"priority\": 1\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/item/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:08:59 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "43"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"item creation was successful\"\n}"
+				},
+				{
+					"name": "Create Item",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"My first item\",\n    \"priority\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/item/",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								""
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:10:28 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"invalid data\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Update Item",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"second item\",\n    \"priority\": 1\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Host}}/todo/item/4",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"item",
+						"4"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Not found",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"new title for item after update\",\n    \"priority\": 4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/item/33",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"33"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:15:11 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "32"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"item does not exist\"\n}"
+				},
+				{
+					"name": "Successful",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"second item\",\n    \"priority\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/item/4",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"4"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:16:46 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "41"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"item update was successful\"\n}"
+				},
+				{
+					"name": "With invalid payload",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjJ9.zNRlcJU-WyNqQNHeTPWxW1bfofp5x9Fo6PyfJf5ZJaY",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"priority\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/todo/item/4",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"4"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:17:09 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "25"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"invalid data\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Item",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{AuthToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{Host}}/todo/item/3",
+					"host": [
+						"{{Host}}"
+					],
+					"path": [
+						"todo",
+						"item",
+						"3"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Not found",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/item/5",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"5"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:19:46 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "32"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": \"item does not exist\"\n}"
+				},
+				{
+					"name": "Delete Item",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{AuthToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/todo/item/3",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"todo",
+								"item",
+								"3"
+							]
+						}
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=UTF-8"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 26 Jul 2023 12:24:56 GMT"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "Host",
+			"value": "http://127.0.0.1:2020",
+			"type": "string"
+		},
+		{
+			"key": "AuthToken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

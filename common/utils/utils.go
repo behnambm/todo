@@ -1,6 +1,10 @@
 package utils
 
-import "strconv"
+import (
+	"log"
+	"os"
+	"strconv"
+)
 
 func InterfaceToString(value interface{}) string {
 	// Check if the value is already a string, and return it if it is.
@@ -21,4 +25,12 @@ func InterfaceToString(value interface{}) string {
 	}
 
 	return ""
+}
+
+func GetEnvOrPanic(name string) string {
+	v := os.Getenv(name)
+	if v == "" {
+		log.Panicln(name)
+	}
+	return v
 }

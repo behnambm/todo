@@ -1,7 +1,9 @@
 package utils
 
 import (
+	"io"
 	"log"
+	"net/http"
 	"os"
 	"strconv"
 )
@@ -33,4 +35,66 @@ func GetEnvOrPanic(name string) string {
 		log.Panicln(name)
 	}
 	return v
+}
+
+func PostJson(url string, data io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodPost, url, data)
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func PostJsonWithAuth(url, token string, data io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodPost, url, data)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", token)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func PutJsonWithAuth(url, token string, data io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodPut, url, data)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", token)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func GetWithAuth(url, token string) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req.Header.Set("Authorization", token)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
+}
+
+func DeleteWithAuth(url, token string) (*http.Response, error) {
+	req, err := http.NewRequest(http.MethodDelete, url, nil)
+	req.Header.Set("Authorization", token)
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp, nil
 }

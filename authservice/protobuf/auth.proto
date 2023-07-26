@@ -3,10 +3,10 @@ syntax = "proto3";
 option go_package = "github.com/behnambm/todo/authservice";
 
 
-// The Token service definition.
-service Token {
+service Auth {
   rpc IsTokenValid (TokenRequest) returns (TokenReply) {}
   rpc GetToken (GetTokenRequest) returns (GetTokenReply) {}
+  rpc ValidateTokenWithClaims (ValidateTokenWithClaimsRequest) returns (ValidateTokenWithClaimsReply) {}
 }
 
 message TokenRequest {
@@ -23,4 +23,13 @@ message GetTokenRequest {
 
 message GetTokenReply {
   string token = 1;
+}
+
+message ValidateTokenWithClaimsRequest {
+  string token = 1;
+}
+
+message  ValidateTokenWithClaimsReply {
+  map<string, string> claims = 1;
+  bool isValid = 2;
 }

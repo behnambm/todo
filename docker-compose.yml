@@ -17,9 +17,35 @@ services:
       - internal-net
     healthcheck:
       test: ["CMD", "curl", "-f", "http://guest:guest@localhost:15672/api/health/checks/alarms"]
-      interval: 20s
-      timeout: 10s
+      interval: 5s
+      timeout: 5s
       retries: 5
+
+  gateway-service:
+    build:
+      context: ./gatewayservice
+    environment:
+      BROKER_USER_QUEUE: "user.queue"
+      BROKER_TODO_QUEUE: "todo.queue"
+      AMQP_SERVER_URI: "amqp://guest:guest@message-broker:5672/"
+      HTTP_LISTEN_PORT: 2020
+      USER_SERVICE_GRPC_URL: "user-service:4040"
+      AUTH_SERVICE_GRPC_URL: "auth-service:6060"
+      TODO_SERVICE_GRPC_URL: "todo-service:7070"
+    restart: on-failure
+    ports:
+      - "2020:2020"
+    networks:
+      - internal-net
+    depends_on:
+      message-broker:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+      todo-service:
+        condition: service_started
+      auth-service:
+        condition: service_started
 
   user-service:
     build:

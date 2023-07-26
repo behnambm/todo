@@ -8,6 +8,7 @@ import (
 
 type UserRepo interface {
 	GetUserByEmail(string) (types.User, error)
+	GetUserById(int64) (types.User, error)
 	CreateUser(types.User) (types.User, error)
 }
 
@@ -25,6 +26,15 @@ func (us *UserService) GetUserByEmail(email string) (types.User, error) {
 	user, err := us.repo.GetUserByEmail(email)
 	if err != nil {
 		return types.User{}, fmt.Errorf("[Service] GetUserByEmail - %w", err)
+	}
+
+	return user, nil
+}
+
+func (us *UserService) GetUserById(userId int64) (types.User, error) {
+	user, err := us.repo.GetUserById(userId)
+	if err != nil {
+		return types.User{}, fmt.Errorf("[Service] GetUserById - %w", err)
 	}
 
 	return user, nil

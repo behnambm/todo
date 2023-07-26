@@ -15,6 +15,7 @@ import (
 
 type UserService interface {
 	GetUserByEmail(string) (types.User, error)
+	GetUserById(int64) (types.User, error)
 }
 
 // Server is used to implement User RPC service
@@ -56,13 +57,24 @@ func (s Server) Run(ctx context.Context) {
 	}
 }
 
-func (s Server) GetUserByEmail(ctx context.Context, in *pb.UserRequest) (*pb.UserReply, error) {
+func (s Server) GetUserByEmail(ctx context.Context, in *pb.GetUserByEmailRequest) (*pb.GetUserReply, error) {
 	user, err := s.userSvc.GetUserByEmail(in.GetEmail())
 	if err != nil {
 		log.Printf("[gRPC] GetUserByEmail - user [%s] not found - %v", in.GetEmail(), err)
 
-		return &pb.UserReply{}, status.Error(codes.NotFound, "user not found")
+		return &pb.GetUserReply{}, status.Error(codes.NotFound, "user not found")
 	}
 
-	return &pb.UserReply{Name: user.Name, Email: user.Email, Id: user.ID, Password: user.Password}, nil
+	return &pb.GetUserReply{Name: user.Name, Email: user.Email, Id: user.ID, Password: user.Password}, nil
+}
+
+func (s Server) GetUserById(ctx context.Context, in *pb.GetUserByIdRequest) (*pb.GetUserReply, error) {
+	user, err := s.userSvc.GetUserById(in.GetUserId())
+	if err != nil {
+		log.Printf("[gRPC] GetUserById - user [%s] not found - %v", in.GetUserId(), err)
+
+		return &pb.GetUserReply{}, status.Error(codes.NotFound, "user not found")
+	}
+
+	return &pb.GetUserReply{Name: user.Name, Email: user.Email, Id: user.ID, Password: user.Password}, nil
 }

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"github.com/behnambm/todo/common/utils"
 	"github.com/golang-jwt/jwt"
 	"log"
 )
@@ -19,7 +20,7 @@ func New(secret string) TokenService {
 }
 
 // GetToken is used to generate a JWT token containing UserId in claims
-func (s TokenService) GetToken(userID int) (string, error) {
+func (s TokenService) GetToken(userID int64) (string, error) {
 	token := jwt.NewWithClaims(s.SignMethod, jwt.MapClaims{
 		"uid": userID,
 	})
@@ -56,4 +57,15 @@ func (s TokenService) IsTokenValid(tokenString string) bool {
 	_, claimErr := s.GetClaim(tokenString)
 
 	return claimErr == nil
+}
+
+func (s TokenService) IsValidWithClaim(tokenString string) (map[string]string, bool) {
+	claim, claimErr := s.GetClaim(tokenString)
+	claimMap := map[string]string{}
+
+	for k, v := range claim {
+		claimMap[k] = utils.InterfaceToString(v)
+	}
+
+	return claimMap, claimErr == nil
 }

@@ -46,7 +46,7 @@ chmod +x ./start.sh
 ### Test
 
 Unfortunately because of the limited time there are no unit tests but for `gateway` service some tests are provided that
-only can be used after all the services are up and running and the test will be made against real services.
+only can be used **after all the services are up and running** and the test will be made against real services.
 
 ```bash
 cd gatewayservice
